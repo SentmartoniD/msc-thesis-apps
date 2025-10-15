@@ -2,8 +2,9 @@ package migrations
 
 import (
 	_ "embed"
-	"go-food-delivery-app/user-service/internal/platform/database"
-	"go-food-delivery-app/user-service/pkg/logger"
+	"go-food-delivery-app/auth-service/internal/models"
+	"go-food-delivery-app/auth-service/pkg/logger"
+	"go-food-delivery-app/auth-service/platform/database"
 
 	"go.uber.org/zap"
 )
@@ -21,7 +22,7 @@ func ExecuteMigrations() (err error) {
 	// AutoMigrate the User model
 	if err := database.DB.
 		AutoMigrate(
-		//&models.User{},
+			&models.UserCredentials{},
 		); err != nil {
 		logger.Log.Fatal("failed to auto-migrate",
 			zap.Error(err),
