@@ -7,7 +7,6 @@ import (
 	"go-food-delivery-app/user-service/pkg/logger"
 	"os"
 
-	"github.com/joho/godotenv"
 	"go.uber.org/zap"
 )
 
@@ -20,8 +19,6 @@ func main() {
 }
 
 func loadAllConfiguration() {
-	godotenv.Load(".env")
-
 	server.LoadServerConfig()
 	logger.LoadLoggerConfig()
 }

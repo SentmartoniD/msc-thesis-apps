@@ -16,8 +16,41 @@ spec:
       containers:
         - name: go-auth-service
           image: denisssssss/go-auth-service:latest
+          ports:
+            - containerPort: 8000
+          env:
+            - name: SERVER_PORT
+              valueFrom:
+                configMapKeyRef:
+                  name: go-auth-service-config
+                  key: SERVER_PORT
+            - name: DB_HOST
+              valueFrom:
+                configMapKeyRef:
+                  name: go-auth-service-config
+                  key: DB_HOST
+            - name: DB_PORT
+              valueFrom:
+                configMapKeyRef:
+                  name: go-auth-service-config
+                  key: DB_PORT
+            - name: DB_NAME
+              valueFrom:
+                configMapKeyRef:
+                  name: go-auth-service-config
+                  key: DB_NAME
+            - name: DB_USER
+              valueFrom:
+                configMapKeyRef:
+                  name: go-auth-service-config
+                  key: DB_USER
+            - name: DB_PASS
+              valueFrom:
+                secretKeyRef:
+                  name: go-auth-service-secret
+                  key: DB_PASS
 ---
-# Service
+# Service - ClusterIP
 apiVersion: v1
 kind: Service
 metadata:

@@ -1,0 +1,74 @@
+# Deployment
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: go-auth-service-postgres-deployment
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: go-auth-service-postgres
+  template:
+    metadata:
+      labels:
+        app: go-auth-service-postgres
+    spec:
+      containers:
+      - name: go-auth-service-postgres
+        image: postgres:16-alpine
+        ports:
+        - containerPort: 5432
+        env:
+        - name: POSTGRES_DB
+          valueFrom:
+            configMapKeyRef:
+              name: go-auth-service-config
+              key: DB_NAME
+        - name: POSTGRES_USER
+          valueFrom:
+            configMapKeyRef:
+              name: go-auth-service-config
+              key: DB_USER
+        - name: POSTGRES_PASSWORD
+          valueFrom:
+            secretKeyRef:
+              name: go-auth-service-secret
+              key: DB_PASS
+        - name: PGDATA 
+          value: /var/lib/postgresql/data/pgdata
+        volumeMounts:
+          - name: go-auth-service-postgres-storage
+            mountPath: /var/lib/postgresql/data
+      volumes:
+        - name: go-auth-service-postgres-storage
+          persistentVolumeClaim:
+            claimName: go-auth-service-pvc
+---
+# Service - ClusterIP
+apiVersion: v1
+kind: Service
+metadata:
+  name: go-auth-service-postgres
+spec:
+  type: ClusterIP
+  selector:
+    app: go-auth-service-postgres
+  ports:
+    - name: go-auth-service-postgres
+      protocol: TCP
+      port: 5432
+      targetPort: 5432
+---
+# Service - LoadBalancer
+apiVersion: v1
+kind: Service
+metadata:
+  name: go-auth-service-postgres-loadbalancer
+spec:
+  type: LoadBalancer
+  selector:
+    app: go-auth-service-postgres
+  ports:
+    - protocol: TCP
+      port: 5432
+      targetPort: 5432
