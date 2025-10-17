@@ -1,0 +1,33 @@
+# Deployment
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: go-auth-service-deployment
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: go-auth-service
+  template:
+    metadata:
+      labels:
+        app: go-auth-service
+    spec:
+      containers:
+        - name: go-auth-service
+          image: denisssssss/go-auth-service:latest
+---
+# Service
+apiVersion: v1
+kind: Service
+metadata:
+  name: go-auth-service
+spec:
+  type: ClusterIP
+  selector:
+    app: go-auth-service
+  ports:
+    - name: go-auth-service
+      protocol: TCP
+      port: 80
+      targetPort: 8000
