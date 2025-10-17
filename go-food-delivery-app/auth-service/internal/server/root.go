@@ -15,7 +15,8 @@ import (
 )
 
 var (
-	ip         = net.IPv4(127, 0, 0, 1)
+	//ip         = net.IPv4(127, 0, 0, 1)
+	ip         = net.IPv4(0, 0, 0, 0)
 	port       = 8000
 	httpServer *http.Server
 )
